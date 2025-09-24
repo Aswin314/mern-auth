@@ -1,13 +1,14 @@
 import User from "../model/Usermodel.js";
+import bcryptjs from "bcryptjs";
 
-export const signup = (req, res) => {
+export const signup = async (req, res) => {
     const { username, email, password } = req.body;
-    const NewUser = new User({ username, email, password })
-    NewUser.save()
-        .then(() => {
-            res.status(201).json({ message: 'User registered successfully' });
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'Error registering user', error });
-        });
-};
+    const hashpassword = bcryptjs.hashSync(password, 10);
+    try {
+        const NewUser = new User({ username, email, password: hashpassword })
+        await NewUser.save()
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error registering user', error });
+    }
+};  
