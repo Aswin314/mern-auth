@@ -1,3 +1,4 @@
+import { errorHandler } from "../errorhandler.js";
 import User from "../model/Usermodel.js";
 import bcryptjs from "bcryptjs";
 
@@ -9,6 +10,6 @@ export const signup = async (req, res) => {
         await NewUser.save()
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Error registering user', error });
+        next(errorHandler(500, error.message));
     }
 };  
